@@ -28,8 +28,8 @@ smtp = {"sender": "",    # elasticemail.com verified sender
         "recipient": "", # elasticemail.com verified recipient
         "server": "in-v3.mailjet.com",      # elasticemail.com SMTP server
         "port": 587,                        # elasticemail.com SMTP port
-        "user": "",      # elasticemail.com user
-        "password": ""}    # elasticemail.com password
+        "user": "user",      # elasticemail.com user
+        "password": "password"}    # elasticemail.com password
 
 # append all error messages to email and send
 def send_email(message):
@@ -129,12 +129,19 @@ def does_file_exist(file_exists):
        
 def does_dest_dir_exist(dest_dir_exists):
     try:
-        if os.path.exists(dest_dir_exists):
-            does_file_exist(backupcfg.source_file)
+        jobnumber = sys.argv[1]
+        if(jobnumber == 'job1' or jobnumber=='job2' or jobnumber=='job3'):
+            if os.path.exists(dest_dir_exists):
+                does_file_exist(backupcfg.source_file)
+            else:
+                add_to_log_failed('File or Directiory Unknown')
+                send_email('File or Directiory Unknown')
+                print('Error: This folder does not exist')
         else:
-            add_to_log_failed('File or Directiory Unknown')
-            send_email('File or Directiory Unknown')
-            print('Error: This folder does not exist')
+            add_to_log_failed('Job Number is unknown')
+            send_email('Job Number is unknown')
+            print('Error: Job Number is unknown')
+            
             
     except Exception as e:
        print(f"An error occurred: {e}")
